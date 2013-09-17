@@ -47,7 +47,9 @@ class GitHandler
 
     public function pushMaster()
     {
-        $cmd[] = "git add ../.";
+        $cmd = array();
+        $cmd[] = "cd ../";
+        $cmd[] = "git add .";
         $cmd[] = "git commit -m'Auto commit from doc editor'";
         $cmd[] = "git push origin master";
         return shell_exec(implode(";", $cmd));
@@ -55,12 +57,16 @@ class GitHandler
 
     public function coGhPages()
     {
-        return shell_exec("git checkout gh-pages");
+        $cmd = array();
+        $cmd[] = "cd ../";
+        $cmd[] = "git checkout gh-pages";
+        return shell_exec(implode(";", $cmd));
     }
     public function pushGhPages()
     {
         $cmd = array();
-        $cmd[] = "git add ../html/. ";
+        $cmd[] = "cd ../";
+        $cmd[] = "git add ./html/. ";
         $cmd[] = "git commit -m'Auto commit from doc editor'";
         $cmd[] = "git push --force origin gh-pages";
         $cmd[] = "git checkout master";
