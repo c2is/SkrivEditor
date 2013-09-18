@@ -47,7 +47,9 @@ class GitHandler
 
     public function pushMaster()
     {
-        $cmd[] = "git add ../.";
+        $cmd = array();
+        $cmd[] = "cd ../";
+        $cmd[] = "git add .";
         $cmd[] = "git commit -m'Auto commit from doc editor'";
         $cmd[] = "git push origin master";
         return shell_exec(implode(";", $cmd));
@@ -55,16 +57,31 @@ class GitHandler
 
     public function coGhPages()
     {
-        return shell_exec("git checkout gh-pages");
+        $process = new Process("cd ../;git checkout gh-pages");
+        $process->run(function ($type, $buffer) {
+            if ('err' === $type) {
+                $this->error[] = $buffer;
+            } else {
+                $this->opt[] = $buffer;
+            }
+        });
     }
     public function pushGhPages()
     {
         $cmd = array();
-        $cmd[] = "git add ../html/. ";
+        $cmd[] = "cd ../";
+        $cmd[] = "git add ./html/. ";
         $cmd[] = "git commit -m'Auto commit from doc editor'";
         $cmd[] = "git push --force origin gh-pages";
         $cmd[] = "git checkout master";
-        return shell_exec(implode(";", $cmd));
+        $process = new Process(implode(";", $cmd));
+        $process->run(function ($type, $buffer) {
+            if ('err' === $type) {
+                $this->error[] = $buffer;
+            } else {
+                $this->opt[] = $buffer;
+            }
+        });
     }
 
     private function in_array_match($regex, $array)
