@@ -139,7 +139,7 @@ $ajaxUrl = "./editor.php";
                     <a href="#_" onclick="del();">Del</a>
                 </li>
                 <li class="hint-bottom hint--warning"
-                    data-hint="By clicking here you will delete this page">
+                    data-hint="By clicking here you will preview the html exports">
                     <a href="../html/<?php echo $book->getLanguage(); ?>/chapter1.html" onclick="build();" target="_blank">View</a>
                 </li>
                 <li class="hint-bottom hint--warning"
