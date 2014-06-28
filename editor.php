@@ -10,9 +10,13 @@ use SkrivEditor\Book;
 use SkrivEditor\GitHandler;
 
 $book = new Book();
+$config = array();
+$config["codeLineNumbers"] = false;
+$config["codeSyntaxHighlight"] = true;
+$config["codeInlineStyles"] = true;
 
 // creation of the renderer object
-$renderer = \Skriv\Markup\Renderer::factory();
+$renderer = \Skriv\Markup\Renderer::factory("html", $config);
 
 /*
  * Ajax handler
@@ -41,7 +45,7 @@ switch($_POST["action"]) {
 
         break;
     case "push":
-        build($book);
+        build($book, $config);
         $gHdl = new gitHandler();
         $pullStatus = $gHdl->getPullStatus();
         /*
@@ -93,7 +97,7 @@ switch($_POST["action"]) {
         echo "Content saved into ".$book->getLanguage()."/".$book->getCurrentPage();
         break;
     case "build":
-        build($book);
+        build($book, $config);
         echo "Files generated into directory html/".$book->getLanguage()."/";
         break;
     case "prev":
@@ -110,13 +114,13 @@ switch($_POST["action"]) {
         break;
 }
 
-function build($book)
+function build($book, $config)
 {
     $language = $book->getLanguage();
     $toc = "";
     $html = array();
     foreach ($book->getPages() as $page) {
-        $renderer = \Skriv\Markup\Renderer::factory();
+        $renderer = \Skriv\Markup\Renderer::factory("html", $config);
         $html[$page] = file_get_contents("../html/".$language."/tpl.htm");
         $html[$page] = str_replace("#{doc}#", $renderer->render(file_get_contents("../".$language."/".$page)), $html[$page]);
         $toc .= preg_replace("`a href=\"#([^\"]*)\"`", "a href=\"".getHtmlPageName($page)."#\\1\"", $renderer->getToc());
